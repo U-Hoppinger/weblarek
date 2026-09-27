@@ -1,18 +1,21 @@
-import { IBuyer, TPayment } from "../../types";
+import { IBuyer, TPayment, TFormErrors } from "../../types";
 
 export class BuyerData {
-  payment: TPayment | null = null;
-  address: string = "";
-  phone: string = "";
-  email: string = "";
+  protected payment: TPayment | null = null;
+  protected address: string = "";
+  protected phone: string = "";
+  protected email: string = "";
 
   setBuyerData(data: Partial<IBuyer>): void {
-    Object.assign(this, data);
+    if (data.payment !== undefined) this.payment = data.payment;
+    if (data.address !== undefined) this.address = data.address;
+    if (data.phone !== undefined) this.phone = data.phone;
+    if (data.email !== undefined) this.email = data.email;
   }
 
   getBuyerData(): IBuyer {
     return {
-      payment: this.payment as TPayment,
+      payment: this.payment,
       address: this.address,
       phone: this.phone,
       email: this.email,
@@ -26,13 +29,13 @@ export class BuyerData {
     this.email = "";
   }
 
-  validateData(): Partial<Record<keyof IBuyer, string>> {
-    const errors: Partial<Record<keyof IBuyer, string>> = {};
+  validateData(): TFormErrors {
+    const errors: TFormErrors = {};
 
     if (!this.payment) errors.payment = "Не выбран вид оплаты";
-    if (!this.address) errors.address = "Укажите адрес доставки";
-    if (!this.phone) errors.phone = "Укажите номер телефона";
-    if (!this.email) errors.email = "Укажите электронную почту";
+    if (!this.address.trim()) errors.address = "Укажите адрес доставки";
+    if (!this.phone.trim()) errors.phone = "Укажите номер телефона";
+    if (!this.email.trim()) errors.email = "Укажите электронную почту";
 
     return errors;
   }

@@ -8,6 +8,7 @@ export interface IApi {
     method?: ApiPostMethods,
   ): Promise<T>;
 }
+
 // Тип для способов оплаты
 export type TPayment = "online" | "cash";
 
@@ -23,11 +24,14 @@ export interface IProduct {
 
 // Интерфейс покупателя
 export interface IBuyer {
-  payment: TPayment;
+  payment: TPayment | null;
   email: string;
   phone: string;
   address: string;
 }
+
+// Тип для ошибок валидации форм
+export type TFormErrors = Partial<Record<keyof IBuyer, string>>;
 
 // Ответ сервера с каталогом товаров
 export interface IProductList {
