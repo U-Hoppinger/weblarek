@@ -16,14 +16,27 @@ console.log(
   catalog.getProductById(apiProducts.items[0].id),
 );
 
+catalog.setPreview(apiProducts.items[0]);
+console.log("2.1. [Каталог] Получение превью товара:", catalog.getPreview());
+
 // --- Тест Корзины ---
 const basket = new Basket();
 basket.addItem(apiProducts.items[0]);
 basket.addItem(apiProducts.items[1]);
 console.log("3. [Корзина] Содержимое:", basket.getItems());
 console.log("4. [Корзина] Итоговая сумма:", basket.getTotalPrice());
+
+console.log("4.1. [Корзина] Общее количество товаров:", basket.getTotalCount());
+console.log(
+  "4.2. [Корзина] Есть ли товар в корзине?:",
+  basket.isInBasket(apiProducts.items[0].id),
+);
+
 basket.removeItem(apiProducts.items[0].id);
 console.log("5. [Корзина] После удаления первого товара:", basket.getItems());
+
+basket.clear();
+console.log("5.1. [Корзина] После полной очистки:", basket.getItems());
 
 // --- Тест Покупателя ---
 const buyer = new BuyerData();
@@ -33,6 +46,9 @@ console.log(
   "7. [Покупатель] Ошибки валидации (должен ругаться на адрес и оплату):",
   buyer.validateData(),
 );
+
+buyer.clearData();
+console.log("7.1. [Покупатель] Данные после очистки:", buyer.getBuyerData());
 
 const baseApi = new Api(API_URL);
 const api = new LarekAPI(baseApi);
