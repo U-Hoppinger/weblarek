@@ -11,6 +11,7 @@
   padding-top: 5vh;
   padding-bottom: 5vh;
   box-sizing: border-box;
+  overflow: hidden;
 
   &_active {
     display: flex;
@@ -25,6 +26,8 @@
     border-radius: 3rem;
     box-sizing: border-box;
     position: relative;
+    max-height: 90vh;
+    overflow: hidden;
   }
 
   &__content {
