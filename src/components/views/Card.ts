@@ -1,19 +1,18 @@
 import { Component } from "../base/Component";
-import { IProduct } from "../../types";
+import { IProductCardData } from "../../types";
 
-// Базовый класс трёх видов карточек: общие элементы и отображение полей.
-export abstract class Card extends Component<IProduct> {
+export abstract class Card<
+  T extends IProductCardData = IProductCardData,
+> extends Component<T> {
   protected readonly titleElement: HTMLElement;
   protected readonly priceElement: HTMLElement;
 
   protected constructor(container: HTMLElement) {
     super(container);
-    this.titleElement = container.querySelector<HTMLElement>(".card__title")!;
-    this.priceElement = container.querySelector<HTMLElement>(".card__price")!;
-  }
 
-  set id(value: string) {
-    this.container.dataset.id = value;
+    this.titleElement = container.querySelector<HTMLElement>(".card__title")!;
+
+    this.priceElement = container.querySelector<HTMLElement>(".card__price")!;
   }
 
   set title(value: string) {
@@ -21,6 +20,7 @@ export abstract class Card extends Component<IProduct> {
   }
 
   set price(value: number | null) {
-    this.priceElement.textContent = value === null ? "Бесценно" : `${value} синапсов`;
+    this.priceElement.textContent =
+      value === null ? "Бесценно" : `${value} синапсов`;
   }
 }

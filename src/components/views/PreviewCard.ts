@@ -1,22 +1,35 @@
 import { ProductCard } from "./ProductCard";
 import { IEvents } from "../base/Events";
-import { IProduct } from "../../types";
+import { IProductCardData } from "../../types";
 import { cloneTemplate } from "../../utils/utils";
 
-export interface IPreviewData extends IProduct {
-  inBasket: boolean;
+interface IPreviewCardData extends IProductCardData {
+  category: string;
+  image: string;
+  imageAlt: string;
+  description: string;
+  buttonText: string;
+  buttonDisabled: boolean;
 }
 
-export class PreviewCard extends ProductCard {
+export class PreviewCard extends ProductCard<IPreviewCardData> {
+  private readonly events: IEvents;
   private readonly descriptionElement: HTMLElement;
   private readonly button: HTMLButtonElement;
 
   constructor(events: IEvents) {
-    super(cloneTemplate<HTMLElement>("#card-preview"), events);
-    this.descriptionElement = this.container.querySelector<HTMLElement>(".card__text")!;
-    this.button = this.container.querySelector<HTMLButtonElement>(".card__button")!;
+    super(cloneTemplate<HTMLElement>("#card-preview"));
+
+    this.events = events;
+
+    this.descriptionElement =
+      this.container.querySelector<HTMLElement>(".card__text")!;
+
+    this.button =
+      this.container.querySelector<HTMLButtonElement>(".card__button")!;
+
     this.button.addEventListener("click", () => {
-      this.events.emit("preview:toggle", { id: this.container.dataset.id ?? "" });
+      this.events.emit("preview:toggle");
     });
   }
 
@@ -24,23 +37,11 @@ export class PreviewCard extends ProductCard {
     this.descriptionElement.textContent = value;
   }
 
-  set inBasket(value: boolean) {
-    this.button.textContent = this.button.disabled
-      ? "Недоступно"
-      : value ? "Удалить из корзины" : "Купить";
+  set buttonText(value: string) {
+    this.button.textContent = value;
   }
 
-  override set price(value: number | null) {
-    super.price = value;
-    this.button.disabled = value === null;
-    if (this.button.disabled) this.button.textContent = "Недоступно";
-  }
-
-  override render(data: Partial<IPreviewData>): HTMLElement {
-    // product.price должен быть установлен до inBasket.
-    const { inBasket, ...product } = data;
-    super.render(product);
-    if (inBasket !== undefined) this.inBasket = inBasket;
-    return this.container;
+  set buttonDisabled(value: boolean) {
+    this.button.disabled = value;
   }
 }

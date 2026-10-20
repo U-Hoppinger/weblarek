@@ -1,22 +1,30 @@
 import { Component } from "../base/Component";
-import { IEvents } from "../base/Events";
 
-// Модальное окно не является родителем для компонентов содержимого.
 export class Modal extends Component<never> {
   private readonly contentElement: HTMLElement;
   private readonly closeButton: HTMLButtonElement;
 
-  constructor(container: HTMLElement, events: IEvents) {
+  private readonly handleEscape = (event: KeyboardEvent): void => {
+    if (event.key === "Escape") {
+      this.close();
+    }
+  };
+
+  constructor(container: HTMLElement) {
     super(container);
-    this.contentElement = container.querySelector<HTMLElement>(".modal__content")!;
-    this.closeButton = container.querySelector<HTMLButtonElement>(".modal__close")!;
-    this.closeButton.addEventListener("click", () => events.emit("modal:close"));
-    container.addEventListener("click", (event) => {
-      if (event.target === container) events.emit("modal:close");
+
+    this.contentElement =
+      container.querySelector<HTMLElement>(".modal__content")!;
+    this.closeButton =
+      container.querySelector<HTMLButtonElement>(".modal__close")!;
+
+    this.closeButton.addEventListener("click", () => {
+      this.close();
     });
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && container.classList.contains("modal_active")) {
-        events.emit("modal:close");
+
+    container.addEventListener("click", (event) => {
+      if (event.target === container) {
+        this.close();
       }
     });
   }
@@ -24,11 +32,16 @@ export class Modal extends Component<never> {
   open(content: HTMLElement): void {
     this.contentElement.replaceChildren(content);
     this.container.classList.add("modal_active");
+
+    document.addEventListener("keydown", this.handleEscape);
+
     this.closeButton.focus();
   }
 
   close(): void {
     this.container.classList.remove("modal_active");
     this.contentElement.replaceChildren();
+
+    document.removeEventListener("keydown", this.handleEscape);
   }
 }

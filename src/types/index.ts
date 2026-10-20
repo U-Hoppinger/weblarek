@@ -9,10 +9,8 @@ export interface IApi {
   ): Promise<T>;
 }
 
-// Тип для способов оплаты
 export type TPayment = "online" | "cash";
 
-// Интерфейс товара
 export interface IProduct {
   id: string;
   description: string;
@@ -22,7 +20,16 @@ export interface IProduct {
   price: number | null;
 }
 
-// Интерфейс покупателя
+export interface IProductCardData {
+  title: string;
+  price: number | null;
+}
+
+export interface IFormData {
+  valid: boolean;
+  errors: string[];
+}
+
 export interface IBuyer {
   payment: TPayment | null;
   email: string;
@@ -30,22 +37,18 @@ export interface IBuyer {
   address: string;
 }
 
-// Тип для ошибок валидации форм
 export type TFormErrors = Partial<Record<keyof IBuyer, string>>;
 
-// Ответ сервера с каталогом товаров
 export interface IProductList {
   total: number;
   items: IProduct[];
 }
 
-// Данные, которые отправляются на сервер при заказе
 export interface IOrder extends IBuyer {
   total: number;
   items: string[];
 }
 
-// Ответ сервера об успешном заказе
 export interface IOrderResult {
   id: string;
   total: number;

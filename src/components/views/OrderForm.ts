@@ -1,7 +1,7 @@
-import { Form, IFormData } from "./Form";
+import { Form } from "./Form";
 import { IEvents } from "../base/Events";
 import { cloneTemplate } from "../../utils/utils";
-import { TPayment } from "../../types";
+import { TPayment, IFormData } from "../../types";
 
 interface IOrderFormData extends IFormData {
   address: string;
@@ -14,13 +14,28 @@ export class OrderForm extends Form<IOrderFormData> {
   private readonly addressInput: HTMLInputElement;
 
   constructor(events: IEvents) {
-    super(cloneTemplate<HTMLFormElement>("#order"), events, "order:change", "order:submit");
-    this.onlineButton = this.formElement.querySelector<HTMLButtonElement>('button[name="card"]')!;
-    this.cashButton = this.formElement.querySelector<HTMLButtonElement>('button[name="cash"]')!;
-    this.addressInput = this.formElement.querySelector<HTMLInputElement>('input[name="address"]')!;
+    super(
+      cloneTemplate<HTMLFormElement>("#order"),
+      events,
+      "order:change",
+      "order:submit",
+    );
+    this.onlineButton = this.formElement.querySelector<HTMLButtonElement>(
+      'button[name="card"]',
+    )!;
+    this.cashButton = this.formElement.querySelector<HTMLButtonElement>(
+      'button[name="cash"]',
+    )!;
+    this.addressInput = this.formElement.querySelector<HTMLInputElement>(
+      'input[name="address"]',
+    )!;
 
-    this.onlineButton.addEventListener("click", () => events.emit("order:change", { field: "payment", value: "online" }));
-    this.cashButton.addEventListener("click", () => events.emit("order:change", { field: "payment", value: "cash" }));
+    this.onlineButton.addEventListener("click", () =>
+      events.emit("order:change", { field: "payment", value: "online" }),
+    );
+    this.cashButton.addEventListener("click", () =>
+      events.emit("order:change", { field: "payment", value: "cash" }),
+    );
   }
 
   set address(value: string) {

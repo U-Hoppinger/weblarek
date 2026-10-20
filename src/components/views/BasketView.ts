@@ -15,10 +15,15 @@ export class BasketView extends Component<IBasketViewData> {
 
   constructor(events: IEvents) {
     super(cloneTemplate<HTMLElement>("#basket"));
-    this.listElement = this.container.querySelector<HTMLUListElement>(".basket__list")!;
-    this.totalElement = this.container.querySelector<HTMLElement>(".basket__price")!;
-    this.checkoutButton = this.container.querySelector<HTMLButtonElement>(".basket__button")!;
-    this.checkoutButton.addEventListener("click", () => events.emit("basket:checkout"));
+    this.listElement =
+      this.container.querySelector<HTMLUListElement>(".basket__list")!;
+    this.totalElement =
+      this.container.querySelector<HTMLElement>(".basket__price")!;
+    this.checkoutButton =
+      this.container.querySelector<HTMLButtonElement>(".basket__button")!;
+    this.checkoutButton.addEventListener("click", () =>
+      events.emit("basket:checkout"),
+    );
   }
 
   set items(value: HTMLElement[]) {

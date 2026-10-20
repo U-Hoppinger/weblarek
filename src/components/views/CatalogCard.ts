@@ -1,12 +1,17 @@
 import { ProductCard } from "./ProductCard";
-import { IEvents } from "../base/Events";
+import { IProductCardData } from "../../types";
 import { cloneTemplate } from "../../utils/utils";
 
-export class CatalogCard extends ProductCard {
-  constructor(events: IEvents) {
-    super(cloneTemplate<HTMLElement>("#card-catalog"), events);
-    this.container.addEventListener("click", () => {
-      this.events.emit("card:select", { id: this.container.dataset.id ?? "" });
-    });
+interface ICatalogCardData extends IProductCardData {
+  category: string;
+  image: string;
+  imageAlt: string;
+}
+
+export class CatalogCard extends ProductCard<ICatalogCardData> {
+  constructor(onClick: () => void) {
+    super(cloneTemplate<HTMLElement>("#card-catalog"));
+
+    this.container.addEventListener("click", onClick);
   }
 }

@@ -1,6 +1,7 @@
-import { Form, IFormData } from "./Form";
+import { Form } from "./Form";
 import { IEvents } from "../base/Events";
 import { cloneTemplate } from "../../utils/utils";
+import { IFormData } from "../../types";
 
 interface IContactsFormData extends IFormData {
   email: string;
@@ -12,9 +13,20 @@ export class ContactsForm extends Form<IContactsFormData> {
   private readonly phoneInput: HTMLInputElement;
 
   constructor(events: IEvents) {
-    super(cloneTemplate<HTMLFormElement>("#contacts"), events, "contacts:change", "contacts:submit");
-    this.emailInput = this.formElement.querySelector<HTMLInputElement>('input[name="email"]')!;
-    this.phoneInput = this.formElement.querySelector<HTMLInputElement>('input[name="phone"]')!;
+    super(
+      cloneTemplate<HTMLFormElement>("#contacts"),
+      events,
+      "contacts:change",
+      "contacts:submit",
+    );
+
+    this.emailInput = this.formElement.querySelector<HTMLInputElement>(
+      'input[name="email"]',
+    )!;
+
+    this.phoneInput = this.formElement.querySelector<HTMLInputElement>(
+      'input[name="phone"]',
+    )!;
   }
 
   set email(value: string) {

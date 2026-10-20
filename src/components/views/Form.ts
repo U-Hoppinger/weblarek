@@ -1,12 +1,7 @@
 import { Component } from "../base/Component";
 import { IEvents } from "../base/Events";
+import { IFormData } from "../../types";
 
-export interface IFormData {
-  valid: boolean;
-  errors: string[];
-}
-
-/** Базовый класс форм: общие поля, события и отображение валидации. */
 export abstract class Form<T extends IFormData> extends Component<T> {
   protected readonly formElement: HTMLFormElement;
   protected readonly submitButton: HTMLButtonElement;
@@ -20,17 +15,31 @@ export abstract class Form<T extends IFormData> extends Component<T> {
     submitEvent: string,
   ) {
     super(container);
-    this.formElement = container;
-    this.submitButton = container.querySelector<HTMLButtonElement>('button[type="submit"]')!;
-    this.errorElement = container.querySelector<HTMLElement>(".form__errors")!;
-    this.inputs = Array.from(container.querySelectorAll<HTMLInputElement>("input[name]"));
 
-    this.inputs.forEach((input) => input.addEventListener("input", () => {
-      events.emit(changeEvent, { field: input.name, value: input.value });
-    }));
+    this.formElement = container;
+
+    this.submitButton = container.querySelector<HTMLButtonElement>(
+      'button[type="submit"]',
+    )!;
+
+    this.errorElement = container.querySelector<HTMLElement>(".form__errors")!;
+
+    this.inputs = Array.from(
+      container.querySelectorAll<HTMLInputElement>("input[name]"),
+    );
+
+    this.inputs.forEach((input) => {
+      input.addEventListener("input", () => {
+        events.emit(changeEvent, {
+          field: input.name,
+          value: input.value,
+        });
+      });
+    });
+
     this.formElement.addEventListener("submit", (event) => {
       event.preventDefault();
-      if (!this.submitButton.disabled) events.emit(submitEvent);
+      events.emit(submitEvent);
     });
   }
 
