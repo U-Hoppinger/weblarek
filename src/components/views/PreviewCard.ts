@@ -1,7 +1,7 @@
 import { ProductCard } from "./ProductCard";
 import { IEvents } from "../base/Events";
 import { IProductCardData } from "../../types";
-import { cloneTemplate } from "../../utils/utils";
+import { ensureElement } from "../../utils/utils";
 
 interface IPreviewCardData extends IProductCardData {
   category: string;
@@ -17,16 +17,20 @@ export class PreviewCard extends ProductCard<IPreviewCardData> {
   private readonly descriptionElement: HTMLElement;
   private readonly button: HTMLButtonElement;
 
-  constructor(events: IEvents) {
-    super(cloneTemplate<HTMLElement>("#card-preview"));
+  constructor(container: HTMLElement, events: IEvents) {
+    super(container);
 
     this.events = events;
 
-    this.descriptionElement =
-      this.container.querySelector<HTMLElement>(".card__text")!;
+    this.descriptionElement = ensureElement<HTMLElement>(
+      ".card__text",
+      this.container,
+    );
 
-    this.button =
-      this.container.querySelector<HTMLButtonElement>(".card__button")!;
+    this.button = ensureElement<HTMLButtonElement>(
+      ".card__button",
+      this.container,
+    );
 
     this.button.addEventListener("click", () => {
       this.events.emit("preview:toggle");

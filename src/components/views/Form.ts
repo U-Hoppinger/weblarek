@@ -1,6 +1,7 @@
 import { Component } from "../base/Component";
 import { IEvents } from "../base/Events";
 import { IFormData } from "../../types";
+import { ensureElement } from "../../utils/utils";
 
 export abstract class Form<T extends IFormData> extends Component<T> {
   protected readonly formElement: HTMLFormElement;
@@ -18,14 +19,18 @@ export abstract class Form<T extends IFormData> extends Component<T> {
 
     this.formElement = container;
 
-    this.submitButton = container.querySelector<HTMLButtonElement>(
+    this.submitButton = ensureElement<HTMLButtonElement>(
       'button[type="submit"]',
-    )!;
+      this.formElement,
+    );
 
-    this.errorElement = container.querySelector<HTMLElement>(".form__errors")!;
+    this.errorElement = ensureElement<HTMLElement>(
+      ".form__errors",
+      this.formElement,
+    );
 
     this.inputs = Array.from(
-      container.querySelectorAll<HTMLInputElement>("input[name]"),
+      this.formElement.querySelectorAll<HTMLInputElement>("input[name]"),
     );
 
     this.inputs.forEach((input) => {

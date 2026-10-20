@@ -1,6 +1,5 @@
 import { ProductCard } from "./ProductCard";
 import { IProductCardData } from "../../types";
-import { cloneTemplate } from "../../utils/utils";
 
 interface ICatalogCardData extends IProductCardData {
   category: string;
@@ -9,8 +8,8 @@ interface ICatalogCardData extends IProductCardData {
 }
 
 export class CatalogCard extends ProductCard<ICatalogCardData> {
-  constructor(onClick: () => void) {
-    super(cloneTemplate<HTMLElement>("#card-catalog"));
+  constructor(container: HTMLElement, onClick: () => void) {
+    super(container);
 
     this.container.addEventListener("click", onClick);
   }

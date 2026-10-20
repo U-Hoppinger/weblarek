@@ -1,4 +1,5 @@
 import { Component } from "../base/Component";
+import { ensureElement } from "../../utils/utils";
 
 export class Modal extends Component<never> {
   private readonly contentElement: HTMLElement;
@@ -13,17 +14,22 @@ export class Modal extends Component<never> {
   constructor(container: HTMLElement) {
     super(container);
 
-    this.contentElement =
-      container.querySelector<HTMLElement>(".modal__content")!;
-    this.closeButton =
-      container.querySelector<HTMLButtonElement>(".modal__close")!;
+    this.contentElement = ensureElement<HTMLElement>(
+      ".modal__content",
+      this.container,
+    );
+
+    this.closeButton = ensureElement<HTMLButtonElement>(
+      ".modal__close",
+      this.container,
+    );
 
     this.closeButton.addEventListener("click", () => {
       this.close();
     });
 
-    container.addEventListener("click", (event) => {
-      if (event.target === container) {
+    this.container.addEventListener("click", (event) => {
+      if (event.target === this.container) {
         this.close();
       }
     });

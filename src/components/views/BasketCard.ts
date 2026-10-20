@@ -1,6 +1,6 @@
 import { Card } from "./Card";
 import { IProductCardData } from "../../types";
-import { cloneTemplate } from "../../utils/utils";
+import { ensureElement } from "../../utils/utils";
 
 interface IBasketCardData extends IProductCardData {
   index: number;
@@ -10,16 +10,18 @@ export class BasketCard extends Card<IBasketCardData> {
   private readonly indexElement: HTMLElement;
   private readonly deleteButton: HTMLButtonElement;
 
-  constructor(onDelete: () => void) {
-    super(cloneTemplate<HTMLElement>("#card-basket"));
+  constructor(container: HTMLElement, onDelete: () => void) {
+    super(container);
 
-    this.indexElement = this.container.querySelector<HTMLElement>(
+    this.indexElement = ensureElement<HTMLElement>(
       ".basket__item-index",
-    )!;
+      this.container,
+    );
 
-    this.deleteButton = this.container.querySelector<HTMLButtonElement>(
+    this.deleteButton = ensureElement<HTMLButtonElement>(
       ".basket__item-delete",
-    )!;
+      this.container,
+    );
 
     this.deleteButton.addEventListener("click", onDelete);
   }
