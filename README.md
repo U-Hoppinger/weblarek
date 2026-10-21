@@ -116,7 +116,7 @@ npm run build
 
 ### `CatalogCard`
 
-Карточка каталога. **Конструктор:** `constructor(container: HTMLElement, onClick: () => void)`. **Поля и сеттеры:** унаследованы от `ProductCard`; **метод:** унаследованный `render(data?: Partial<ICatalogCardData>): HTMLElement`. Обработчик выбора конкретного товара передаётся при создании экземпляра; ID не берётся из DOM.
+Карточка каталога. **Конструктор:** `constructor(container: HTMLElement, events: IEvents, productId: string)`. **Поля и сеттеры:** унаследованы от `ProductCard`; **метод:** унаследованный `render(data?: Partial<ICatalogCardData>): HTMLElement`. При нажатии на карточку компонент генерирует событие catalog:select, передавая идентификатор товара { id: productId } через EventEmitter. Обработка события и выбор товара выполняются в Presenter. Компонент не изменяет данные модели напрямую и не извлекает ID из DOM.
 
 ### `PreviewCard`
 
@@ -124,7 +124,8 @@ npm run build
 
 ### `BasketCard`
 
-Одна позиция корзины. **Конструктор:** `constructor(container: HTMLElement, onDelete: () => void)`. **Поля:** `indexElement: HTMLElement`, `deleteButton: HTMLButtonElement`. **Сеттер:** `index(value: number)`; **метод:** `render(data?: Partial<IBasketCardData>): HTMLElement` (унаследован). Обработчик удаления уже связан с ID позиции в Presenter.
+Карточка отдельной позиции корзиныю. Наследуется от Card. **Конструктор:** `constructor(container: HTMLElement, events: IEventsm, productId: string)`.
+**Поля:** `indexElement: HTMLElement`, `deleteButton: HTMLButtonElement`. **Сеттер:** `index(value: number)`; **метод:** `render(data?: Partial<IBasketCardData>): HTMLElement`. При нажатии на кнопку удаления компонент генерирует событие basket: remove, передавай {id: productId } через EventEmitter. Удаление товара из модели выполняется в Presenter. Компонент не изменяет состояния корзины самостоятельно.
 
 ### `BasketView`
 

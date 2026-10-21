@@ -92,7 +92,8 @@ function renderBasket(): void {
   const cards = basket.getItems().map((item, index) => {
     const card = new BasketCard(
       cloneTemplate<HTMLElement>("#card-basket"),
-      () => basket.removeItem(item.id),
+      events,
+      item.id,
     );
 
     return card.render({
@@ -141,10 +142,8 @@ events.on("catalog:changed", () => {
   const cards = catalog.getProducts().map((product) => {
     const card = new CatalogCard(
       cloneTemplate<HTMLElement>("#card-catalog"),
-      () => {
-        catalog.setPreview(product);
-        modal.open(previewCard.render());
-      },
+      events,
+      product.id,
     );
 
     return card.render({
@@ -159,6 +158,15 @@ events.on("catalog:changed", () => {
   gallery.render({ items: cards });
 });
 
+events.on<{ id: string }>("catalog:select", ({ id }) => {
+  const product = catalog.getProductById(id);
+
+  if (!product) return;
+
+  catalog.setPreview(product);
+  modal.open(previewCard.render());
+});
+
 events.on("catalog:preview-changed", () => {
   renderPreview();
 });
@@ -170,6 +178,10 @@ events.on("basket:changed", () => {
 
   renderBasket();
   renderPreview();
+});
+
+events.on<{ id: string }>("basket:remove", ({ id }) => {
+  basket.removeItem(id);
 });
 
 events.on("buyer:changed", () => {
@@ -241,11 +253,7 @@ events.on<{ field: keyof IBuyer; value: string }>(
   },
 );
 
-let sending = false;
-
 events.on("contacts:submit", async () => {
-  if (sending) return;
-
   const items = basket.getItems();
 
   const order: IOrder = {
@@ -253,8 +261,6 @@ events.on("contacts:submit", async () => {
     total: basket.getTotalPrice(),
     items: items.map((item) => item.id),
   };
-
-  sending = true;
 
   try {
     const result = await api.orderProducts(order);
@@ -273,8 +279,6 @@ events.on("contacts:submit", async () => {
     contactsForm.render({
       errors: [`Не удалось оформить заказ: ${String(error)}`],
     });
-  } finally {
-    sending = false;
   }
 });
 
@@ -288,5 +292,8 @@ api
   })
   .catch((error) => {
     console.error("Не удалось загрузить каталог:", error);
-    gallery.render({ items: [] });
+
+    gallery.render({
+      items: [],
+    });
   });
