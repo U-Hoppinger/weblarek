@@ -90,11 +90,9 @@ function renderPreview(): void {
 
 function renderBasket(): void {
   const cards = basket.getItems().map((item, index) => {
-    const card = new BasketCard(
-      cloneTemplate<HTMLElement>("#card-basket"),
-      events,
-      item.id,
-    );
+    const card = new BasketCard(cloneTemplate("#card-basket"), {
+      onClick: () => events.emit("basket:remove", { id: item.id }),
+    });
 
     return card.render({
       title: item.title,
@@ -140,11 +138,9 @@ function renderContacts(): void {
 
 events.on("catalog:changed", () => {
   const cards = catalog.getProducts().map((product) => {
-    const card = new CatalogCard(
-      cloneTemplate<HTMLElement>("#card-catalog"),
-      events,
-      product.id,
-    );
+    const card = new CatalogCard(cloneTemplate("#card-catalog"), {
+      onClick: () => events.emit("catalog:select", { id: product.id }),
+    });
 
     return card.render({
       title: product.title,

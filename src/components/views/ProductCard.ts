@@ -1,6 +1,7 @@
 import { Card } from "./Card";
 import { IProductCardData } from "../../types";
 import { CDN_URL, categoryMap } from "../../utils/constants";
+import { ensureElement } from "../../utils/utils";
 
 export abstract class ProductCard<T extends IProductCardData> extends Card<T> {
   protected readonly categoryElement: HTMLElement;
@@ -9,11 +10,14 @@ export abstract class ProductCard<T extends IProductCardData> extends Card<T> {
   protected constructor(container: HTMLElement) {
     super(container);
 
-    this.categoryElement =
-      container.querySelector<HTMLElement>(".card__category")!;
-
-    this.imageElement =
-      container.querySelector<HTMLImageElement>(".card__image")!;
+    this.categoryElement = ensureElement<HTMLElement>(
+      ".card__category",
+      this.container,
+    );
+    this.imageElement = ensureElement<HTMLImageElement>(
+      ".card__image",
+      this.container,
+    );
   }
 
   set category(value: string) {

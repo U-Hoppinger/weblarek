@@ -29,6 +29,9 @@ export interface IFormData {
   valid: boolean;
   errors: string[];
 }
+export interface ICardActions {
+  onClick: () => void;
+}
 
 export interface IBuyer {
   payment: TPayment | null;
